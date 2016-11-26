@@ -1,0 +1,22 @@
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap/_mixins.scss';
+@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+
+// can add Boostrap overrides, additional Sass/CSS below...
+
+table {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+table td {
+  border: 1px solid #666;
+  cursor: pointer;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+}
+
+#main div {
+  margin-bottom: 20px;
+}
