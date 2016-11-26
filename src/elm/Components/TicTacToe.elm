@@ -52,23 +52,19 @@ update msg model =
                 ( { model
                     | board = newBoard
                     , winner = checkWinner newBoard
-                    , player = nextPlayer model.player
+                    , player =
+                        case model.player of
+                            X ->
+                                O
+
+                            O ->
+                                X
                   }
                 , Cmd.none
                 )
 
         Reset ->
             ( initModel, Cmd.none )
-
-
-nextPlayer : Spot -> Spot
-nextPlayer player =
-    case player of
-        X ->
-            O
-
-        O ->
-            X
 
 
 performMove : Board -> Int -> Int -> Spot -> Board
