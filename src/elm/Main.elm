@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Components.TicTacToe as TicTacToe
+import Components.T10 as T10
 
 
 -- APP
@@ -23,12 +24,12 @@ main =
 
 
 type alias Model =
-    { tttModel : TicTacToe.Model }
+    { tttModel : T10.Model }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { tttModel = TicTacToe.initModel }, Cmd.none )
+    ( { tttModel = T10.initModel }, Cmd.none )
 
 
 
@@ -45,7 +46,7 @@ update msg model =
         TicTacToeMsg subMsg ->
             let
                 ( tttModel, tttCmd ) =
-                    TicTacToe.update subMsg model.tttModel
+                    T10.update subMsg model.tttModel
             in
                 ( { model | tttModel = tttModel }, Cmd.map TicTacToeMsg tttCmd )
 
@@ -62,6 +63,6 @@ view model =
         [ -- inline CSS (literal)
           div [ class "row" ]
             [ div [ id "main", class "col-xs-12" ]
-                [ Html.map TicTacToeMsg (TicTacToe.view model.tttModel) ]
+                [ Html.map TicTacToeMsg (T10.view model.tttModel) ]
             ]
         ]

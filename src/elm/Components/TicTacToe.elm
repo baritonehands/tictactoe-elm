@@ -1,6 +1,7 @@
 module Components.TicTacToe exposing (..)
 
 import Html exposing (Html, table, tbody, tr, td, text, div, button)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Array exposing (Array)
 
@@ -47,18 +48,12 @@ update msg model =
         Move x y ->
             let
                 newBoard =
-                    performMove model.board x y model.player
+                    performMove model.board x y (Just model.player)
             in
                 ( { model
                     | board = newBoard
                     , winner = checkWinner newBoard
-                    , player =
-                        case model.player of
-                            X ->
-                                O
-
-                            O ->
-                                X
+                    , player = nextPlayer model.player
                   }
                 , Cmd.none
                 )
@@ -67,11 +62,20 @@ update msg model =
             ( initModel, Cmd.none )
 
 
-performMove : Board -> Int -> Int -> Spot -> Board
+nextPlayer player =
+    case player of
+        X ->
+            O
+
+        O ->
+            X
+
+
+performMove : Array (Array a) -> Int -> Int -> a -> Array (Array a)
 performMove board x y spot =
     case Array.get y board of
         Just row ->
-            Array.set y (Array.set x (Just spot) row) board
+            Array.set y (Array.set x spot row) board
 
         Nothing ->
             board
@@ -112,6 +116,16 @@ checkWinner board =
             Nothing
 
 
+boardFull : Board -> Bool
+boardFull board =
+    case Array.toList <| Array.map Array.toList board of
+        [ [ Just _, Just _, Just _ ], [ Just _, Just _, Just _ ], [ Just _, Just _, Just _ ] ] ->
+            True
+
+        _ ->
+            False
+
+
 
 -- VIEW
 
@@ -132,7 +146,13 @@ view model =
                             "None"
                 )
             ]
-        , table []
+        , tBody model
+        ]
+
+
+tBody model =
+    div [ class "grid" ]
+        [ table []
             [ tbody [] (Array.toList <| Array.indexedMap tRow model.board)
             ]
         ]
@@ -146,8 +166,8 @@ tRow y row =
 tCell : Int -> Int -> Maybe Spot -> Html Msg
 tCell y x spot =
     case spot of
-        Just x ->
-            td [] [ text <| toString x ]
+        Just player ->
+            td [] [ text <| toString player ]
 
         Nothing ->
             td [ onClick <| Move x y ] []

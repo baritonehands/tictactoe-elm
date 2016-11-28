@@ -10,13 +10,44 @@ table {
 }
 
 table td {
-  border: 1px solid #666;
+  border: 1px solid #999;
   cursor: pointer;
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   text-align: center;
 }
 
-#main div {
+.t10 > tbody > tr > td {
+  width: 180px;
+  padding: 10px;
+  border-color: #333;
+  position: relative;
+}
+
+.winner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #666;
+  font-size: 120px;
+  width: 100%;
+  height: 100%;
+}
+
+.selected {
+  background-color: #e4e4e4;
+}
+
+.hidden {
+  display: none;
+}
+
+.grid {
+  background-color:rgba(255, 255, 255, 0.5);
+  position: relative;
+  z-index: 1;
+}
+
+#main > div {
   margin-bottom: 20px;
 }
