@@ -2,14 +2,13 @@ module Components.TicTacToe exposing (..)
 
 import Html exposing (Html, table, tbody, tr, td, text, div, button)
 import Html.Events exposing (onClick)
-import Array exposing (Array)
 
 
 -- MODEL
 
 
 type alias Board =
-    Array (Array (Maybe Spot))
+    List (List (Maybe Spot))
 
 
 type alias Model =
@@ -21,7 +20,7 @@ type alias Model =
 
 initModel : Model
 initModel =
-    { board = Array.repeat 3 (Array.repeat 3 Nothing)
+    { board = List.repeat 3 (List.repeat 3 Nothing)
     , winner = Nothing
     , player = X
     }
@@ -69,12 +68,14 @@ update msg model =
 
 performMove : Board -> Int -> Int -> Spot -> Board
 performMove board x y spot =
-    case Array.get y board of
-        Just row ->
-            Array.set y (Array.set x (Just spot) row) board
+    let
+        replace n list v =
+            List.take n list ++ v :: List.drop (n + 1) list
 
-        Nothing ->
-            board
+        get n list default =
+            Maybe.withDefault default <| List.head <| List.drop n list
+    in
+        replace y board <| replace x (get y board []) (Just spot)
 
 
 winningCombo : List (Maybe Spot) -> Maybe Spot
@@ -92,7 +93,7 @@ winningCombo combo =
 
 checkWinner : Board -> Maybe Spot
 checkWinner board =
-    case Array.toList <| Array.map Array.toList board of
+    case board of
         [ [ a, b, c ], [ d, e, f ], [ g, h, i ] ] ->
             List.map winningCombo
                 [ [ a, b, c ]
@@ -133,14 +134,14 @@ view model =
                 )
             ]
         , table []
-            [ tbody [] (Array.toList <| Array.indexedMap tRow model.board)
+            [ tbody [] <| List.indexedMap tRow model.board
             ]
         ]
 
 
-tRow : Int -> Array (Maybe Spot) -> Html Msg
+tRow : Int -> List (Maybe Spot) -> Html Msg
 tRow y row =
-    tr [] (Array.toList <| Array.indexedMap (tCell y) row)
+    tr [] <| List.indexedMap (tCell y) row
 
 
 tCell : Int -> Int -> Maybe Spot -> Html Msg
